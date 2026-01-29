@@ -6,7 +6,7 @@
 + In this assignment, we would like you to run a whole pipeline of [FinGPT-Forecaster](https://github.com/AI4Finance-Foundation/FinGPT/tree/master/fingpt/FinGPT_Forecaster) to combine Large Language Models with real-world financial market.
 + You will use **Lo**w-**R**ank **A**daptation (**LoRA**) to **P**arameter-**E**fficient **F**ine-**T**uning (**PEFT**) some mainstream LLMs.
 + Analyze and optimize your fine-tuned LLMs using some methods (especially Human-in-the-Loop, **HITL**).
-+ Summarize your result in a very brief research report. Submit your codes onto GitHub repo in a new folder called `Assignment2_Name_UNI` (not a new branch!).
++ Summarize your result in a very brief research report. Submit your codes onto GitHub repo in a new folder in `submissions` called `Assignment1_Name_UNI` (not a new branch!).
 
 > [!WARNING]  
 > ⚠️ **DO NOT SUBMIT YOUR OWN API KEY ONTO GITHUB!!!**
