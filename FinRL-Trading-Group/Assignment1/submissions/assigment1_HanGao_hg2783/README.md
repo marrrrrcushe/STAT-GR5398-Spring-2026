@@ -1,6 +1,6 @@
-Regime-Aware Portfolio Backtest (README)
+# Regime-Aware Portfolio Backtest (README)
 
-Project Summary
+### Project Summary
 Link to Medium: https://medium.com/p/257e00507a06?postPublishedType=initial
 
 This project builds and backtests a systematic equity strategy and compares it to QQQ and SPY.
@@ -11,7 +11,7 @@ I evaluate three variants:
 
 All strategies share the same alpha engine (momentum selection + inverse-volatility weighting). The regime variants differ only in how they scale market exposure during risk-off periods.
 
-⸻
+### Key Data
 
 Data Inputs
 	•	output/step2/stock_selected.csv
@@ -20,9 +20,9 @@ Contains the selected stock universe by trade_date and tic.
 Contains daily prices and adjustment factor ajexdi used for split-adjusted close prices.
 	•	Benchmarks: QQQ, SPY (downloaded via yfinance with auto_adjust=True).
 
-⸻
 
-Return Definition
+
+### Return Definition
 
 Let close_adj be split-adjusted close:
 
@@ -36,9 +36,9 @@ $$
 r_{i,t} = \frac{P^{adj}{i,t}}{P^{adj}{i,t-1}} - 1
 $$
 
-⸻
 
-Strategy Details
+
+### Strategy Details
 
 1) Portfolio Construction (Base)
 
@@ -76,11 +76,10 @@ $$
 \text{NAV}t = \text{NAV}{t-1}(1+r^{net}_t),\quad \text{NAV}_0=1
 $$
 
-⸻
 
-Regime Overlay (Portfolio_Regime / Portfolio_Regime_off_0.2)
 
-Regime Signal
+### Regime Overlay (Portfolio_Regime / Portfolio_Regime_off_0.2)
+
 
 Risk-off is triggered when SPY is below its 200-day moving average:
 
@@ -108,9 +107,8 @@ where:
 	•	Portfolio_Regime: baseline setting (less defensive)
 	•	Portfolio_Regime_off_0.2: $$\alpha_{off}=0.2$$
 
-⸻
 
-Results (Performance Metrics)
+### Results (Performance Metrics)
 
 Metrics reported:
 	•	Cumulative Return
@@ -128,9 +126,9 @@ SPY	2.4158	0.1486	0.1858	0.8388	-0.3372
 
 Key takeaway: The regime overlay dramatically reduces drawdown and volatility while improving annual return, leading to much higher Sharpe ratios. The most defensive variant (off=0.2) achieves the best overall performance.
 
-⸻
 
-How to Run
+
+### How to Run
 	1.	Make sure the following files exist:
 	•	output/step2/stock_selected.csv
 	•	daily.csv
