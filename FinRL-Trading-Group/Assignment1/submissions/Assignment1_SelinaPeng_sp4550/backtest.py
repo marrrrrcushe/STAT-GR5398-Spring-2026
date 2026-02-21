@@ -1,13 +1,3 @@
-"""
-Assignment 1 - Stock Selection Strategy & Backtest
-===================================================
-Strategy: Sector-neutral multi-factor ranking model
-Factors: Quality (ROE, ROA, OPM) + Value (PE, PB, PS) + Safety (debt_ratio)
-Rebalance: Quarterly
-Period: 2018-01-01 to 2025-12-31
-Benchmark: Equal-weight S&P 500 proxy (all stocks in universe)
-"""
-
 import pandas as pd
 import numpy as np
 import matplotlib
@@ -21,11 +11,9 @@ import os
 OUTPUT_DIR = '/home/claude/outputs'
 DATA_FILE  = os.path.join(OUTPUT_DIR, 'final_ratios.csv')
 
-# ── Load data ─────────────────────────────────────────────────────────────────
 print("Loading data...")
 df = pd.read_csv(DATA_FILE, parse_dates=['date'])
 
-# Filter to backtest period
 BACKTEST_START = '2018-01-01'
 BACKTEST_END   = '2025-12-31'
 df = df[(df['date'] >= BACKTEST_START) & (df['date'] <= BACKTEST_END)].copy()
@@ -33,14 +21,15 @@ df.sort_values(['date','tic'], inplace=True)
 df.reset_index(drop=True, inplace=True)
 print(f"Backtest data: {df.shape}, dates: {df['date'].min().date()} → {df['date'].max().date()}")
 
-# ── Factor definitions ─────────────────────────────────────────────────────────
+
+
+
 QUALITY_FACTORS = ['ROE', 'ROA', 'OPM', 'NPM']   # higher = better
 VALUE_FACTORS   = ['pe', 'pb', 'ps']               # lower = better (invert)
 SAFETY_FACTORS  = ['debt_ratio']                   # lower = better (invert)
 
 FEATURE_COLS = QUALITY_FACTORS + VALUE_FACTORS + SAFETY_FACTORS
 
-# ── Winsorize at 1%/99% per factor per date to remove outliers ────────────────
 def winsorize(series, low=0.01, high=0.99):
     lo, hi = series.quantile(low), series.quantile(high)
     return series.clip(lo, hi)
@@ -49,7 +38,6 @@ for col in FEATURE_COLS:
     if col in df.columns:
         df[col] = df.groupby('date')[col].transform(winsorize)
 
-# ── Z-score each factor cross-sectionally per date ────────────────────────────
 def zscore(series):
     mu, sd = series.mean(), series.std()
     return (series - mu) / sd if sd > 1e-9 else series * 0
@@ -63,11 +51,9 @@ for col in VALUE_FACTORS + SAFETY_FACTORS:
         # Invert: lower PE/PB/PS/debt is better
         df[f'z_{col}'] = df.groupby('date')[col].transform(lambda x: -zscore(x))
 
-# ── Composite score (equal weight across factors) ─────────────────────────────
 z_cols = [f'z_{c}' for c in FEATURE_COLS if f'z_{c}' in df.columns]
 df['composite_score'] = df[z_cols].mean(axis=1)
 
-# ── Sector-neutral selection: top 2 stocks per sector per quarter ─────────────
 STOCKS_PER_SECTOR = 2
 
 def select_portfolio(date_df):
@@ -80,7 +66,8 @@ def select_portfolio(date_df):
     )
     return selected['tic'].tolist()
 
-# ── Run quarterly backtest ─────────────────────────────────────────────────────
+
+
 print("\nRunning backtest...")
 
 dates = sorted(df['date'].unique())
@@ -96,17 +83,19 @@ for i, date in enumerate(dates[:-1]):  # exclude last (no forward return)
     if not selected_tickers:
         continue
 
-    # Get returns for selected stocks
+    # Get returns
     selected_rows = date_df[date_df['tic'].isin(selected_tickers)]
     valid_rows = selected_rows.dropna(subset=['y_return'])
 
     if valid_rows.empty:
         continue
 
-    # Equal-weight portfolio return
+
+    
     port_return = valid_rows['y_return'].mean()
 
-    # Benchmark: equal-weight all stocks in universe
+    
+    # Benchmark
     bench_return = date_df.dropna(subset=['y_return'])['y_return'].mean()
 
     quarterly_returns.append({
@@ -127,15 +116,14 @@ results = pd.DataFrame(quarterly_returns)
 results['date'] = pd.to_datetime(results['date'])
 results.sort_values('date', inplace=True)
 
-# ── Cumulative performance ─────────────────────────────────────────────────────
 results['port_cum']  = results['portfolio_return'].cumsum()
 results['bench_cum'] = results['benchmark_return'].cumsum()
 
-# Convert log-returns to price levels
 results['port_value']  = 100 * np.exp(results['portfolio_return'].cumsum())
 results['bench_value'] = 100 * np.exp(results['benchmark_return'].cumsum())
 
-# ── Performance metrics ────────────────────────────────────────────────────────
+
+
 def sharpe(returns, freq=4):
     """Annualized Sharpe (assume 0% risk-free)."""
     if returns.std() == 0: return np.nan
@@ -247,7 +235,9 @@ plt.savefig(os.path.join(OUTPUT_DIR, 'backtest_chart.png'), dpi=150, bbox_inches
 plt.close()
 print(f"\nChart saved: {OUTPUT_DIR}/backtest_chart.png")
 
-# ── Sector exposure chart ──────────────────────────────────────────────────────
+
+
+
 GICS = {10:'Energy',15:'Materials',20:'Industrials',25:'Cons. Disc.',
         30:'Cons. Staples',35:'Health Care',40:'Financials',
         45:'Info Tech',50:'Comm. Svcs',55:'Utilities',60:'Real Estate'}
