@@ -117,14 +117,17 @@ Metrics reported:
 	•	Sharpe Ratio (rf = 0)
 	•	Max Drawdown
 
-Strategy	Cumulative Return	Annual Return	Annual Volatility	Sharpe Ratio	Max Drawdown
-Portfolio_Base	4.4693	0.2112	0.2637	0.8589	-0.4145
-Portfolio_Regime	8.4385	0.2880	0.1956	1.3925	-0.1867
-Portfolio_Regime_off_0.2	9.5034	0.3036	0.1879	1.5059	-0.1756
-QQQ	4.1450	0.2028	0.2306	0.9166	-0.3512
-SPY	2.4158	0.1486	0.1858	0.8388	-0.3372
+| Strategy | Cumulative Return | Annual Return | Annual Volatility | Sharpe Ratio | Max Drawdown |
+|---|---:|---:|---:|---:|---:|
+| Portfolio_Base | 4.4693 | 0.2112 | 0.2637 | 0.8589 | -0.4145 |
+| Portfolio_Regime | 8.4385 | 0.2880 | 0.1956 | 1.3925 | -0.1867 |
+| Portfolio_Regime_off_0.2 | **9.5034** | **0.3036** | **0.1879** | **1.5059** | **-0.1756** |
+| QQQ | 4.1450 | 0.2028 | 0.2306 | 0.9166 | -0.3512 |
+| SPY | 2.4158 | 0.1486 | 0.1858 | 0.8388 | -0.3372 |
 
-Key takeaway: The regime overlay dramatically reduces drawdown and volatility while improving annual return, leading to much higher Sharpe ratios. The most defensive variant (off=0.2) achieves the best overall performance.
+
+**Key takeaway:** The regime overlay dramatically reduces drawdown and volatility while improving annual return, leading to much higher Sharpe ratios. The most defensive variant (off=0.2) achieves the best overall performance.
+
 
 
 
